@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+namespace DAL
+{
+    public class ApplicationUser : IdentityUser
+    {
+        public string Firstname { get; set; }
+        public string LastName { get; set; }
+        public int TraderContact { get; set; }
+        public int ITContact { get; set; }
+        public bool Deactivated { get; set; }
+        public bool Approval { get; set; }
+        public InitiatorType InitiatorType { get; set; }
+
+    }
+
+    public enum InitiatorType
+    {
+        Hub, Subhub, Client, BussinessUser
+    }
+}
