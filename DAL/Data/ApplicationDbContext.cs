@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Utilities;
 
 namespace DAL
 {
@@ -30,10 +31,10 @@ namespace DAL
 
             #region Seed Data
             builder.Entity<IdentityRole>().HasData(
-                        new { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
-                        new { Id = "2", Name = "Client", NormalizedName = "CLIENT" },
-                        new { Id = "3", Name = "Hub", NormalizedName = "HUB" },
-                        new { Id = "4", Name = "Subhub", NormalizedName = "SUBHUB" }
+                        new { Id = "1", Name = InitiatorType.Admin.ToString("G"), NormalizedName = InitiatorType.Admin.ToString("G").ToUpper() },
+                        new { Id = "2", Name = InitiatorType.Client.ToString("G"), NormalizedName = InitiatorType.Client.ToString("G").ToUpper() },
+                        new { Id = "3", Name = InitiatorType.Hub.ToString("G"), NormalizedName = InitiatorType.Hub.ToString("G").ToUpper() },
+                        new { Id = "4", Name = InitiatorType.Subhub.ToString("G"), NormalizedName = InitiatorType.Subhub.ToString("G").ToUpper() }
                     );
 
             var hasher = new PasswordHasher<ApplicationUser>();

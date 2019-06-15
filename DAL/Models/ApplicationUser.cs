@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Utilities;
 
 namespace DAL
 {
@@ -19,8 +20,5 @@ namespace DAL
 
     }
 
-    public enum InitiatorType
-    {
-        Hub, Subhub, Client, BussinessUser
-    }
+    
 }

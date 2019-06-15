@@ -7,7 +7,7 @@ namespace DAL
     public class Connection
     {
 
-        public int ConnectionID { get; set; }
+        public int? ConnectionID { get; set; }
 
         public string TargetRegion { get; set; }
 

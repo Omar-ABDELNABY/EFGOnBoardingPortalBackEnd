@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DAL;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Utilities;
@@ -16,9 +19,11 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         private UserManager<ApplicationUser> userManager;
-        public AuthController(UserManager<ApplicationUser> userManager)
+        private SignInManager<ApplicationUser> signInManager;
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         [HttpPost]
@@ -26,9 +31,10 @@ namespace API.Controllers
         [EnableCors("_myAllowSpecificOrigins")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-           if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 LoginResponse res = await DAL.Auth.Login(userManager, model);
+                await Authenticate(res.claims, false);
                 if (res.success)
                     return Ok(res);
                 else
@@ -38,7 +44,34 @@ namespace API.Controllers
             {
                 return BadRequest("Invalid Login Model");
             }
-            
+
+        }
+
+        private async Task Authenticate(Claim[] claims, bool rememberMe)
+        {
+            var identity = new ClaimsIdentity(claims);
+            ClaimsPrincipal identities = new ClaimsPrincipal(identity);
+            await Microsoft.AspNetCore.Authentication.AuthenticationHttpContextExtensions.SignInAsync(HttpContext, identities);
+        }
+
+        [HttpPost]
+        [Route("Register")]
+        [EnableCors("_myAllowSpecificOrigins")]
+        public async Task<IActionResult> Register(RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                LoginResponse res = await DAL.Auth.Register(userManager, signInManager, model);
+                if (res.success)
+                    return Ok(res);
+                else
+                    return Unauthorized();
+            }
+            else
+            {
+                return BadRequest("Invalid Login Model");
+            }
+
         }
     }
 }

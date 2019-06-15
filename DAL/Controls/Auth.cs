@@ -18,9 +18,10 @@ namespace DAL
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
-                var claims = new[]
+                var claims = new Claim[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Sid,user.Id),
+                    new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
                 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySuperSecureKey"));
@@ -35,11 +36,38 @@ namespace DAL
                 {
                     success = true,
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    expiration = token.ValidTo,
+                    claims = claims
                 };
             }
             return new LoginResponse() { success = false };
 
+        }
+
+
+        public static async Task<LoginResponse> Register(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RegisterModel model)
+        {
+            var hasher = new PasswordHasher<ApplicationUser>();
+            var user = new ApplicationUser
+            {
+                UserName = model.Username,
+                NormalizedUserName = model.Username.ToUpper(),
+                Email = model.Email,
+                NormalizedEmail = model.Email.ToUpper(),
+                EmailConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, model.Password),
+            };
+            var result = await userManager.CreateAsync(user, model.Password);
+            var result2 = await userManager.AddToRoleAsync(user, model.Type.ToString("G"));
+
+            if (result.Succeeded && result2.Succeeded)
+            {
+                return await Login(userManager, new LoginModel() { Username = model.Username, Password = model.Password });
+            }
+            else
+            {
+                return new LoginResponse() { success = false };
+            }
         }
     }
 }
