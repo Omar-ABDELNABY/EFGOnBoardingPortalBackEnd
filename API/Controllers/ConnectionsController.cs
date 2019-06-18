@@ -9,12 +9,14 @@ using DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("_myAllowSpecificOrigins")]
     public class ConnectionsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -66,6 +68,7 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutConnection([FromRoute] int id, [FromBody] Connection connection)
         {
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

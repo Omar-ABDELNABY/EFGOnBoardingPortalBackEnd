@@ -6,7 +6,7 @@ namespace DAL
 {
     public class Subhub
     {
-        public int SubhubID { get; set; }
-        public string SubhubName { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
     }
 }

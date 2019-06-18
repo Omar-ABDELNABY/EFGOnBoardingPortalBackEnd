@@ -6,7 +6,7 @@ namespace DAL
 {
     public class Client
     {
-        public int ClientID { get; set; }
-        public string ClientName { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
     }
 }

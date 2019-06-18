@@ -34,7 +34,7 @@ namespace API.Controllers
             if (ModelState.IsValid)
             {
                 LoginResponse res = await DAL.Auth.Login(userManager, model);
-                await Authenticate(res.claims, false);
+                await Authenticate(res.claims, res.RememberMe);
                 if (res.success)
                     return Ok(res);
                 else

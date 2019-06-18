@@ -13,10 +13,19 @@ namespace DAL
 
         //  Navigational Properties
         public ApplicationUser Initiator { get; set; }
-        public Client ConnClient { get; set; }
-        public Hub ConnHub { get; set; }
-        public Subhub ConnSubHub { get; set; }
+
+        public int ClientID { get; set; }
+        public Client Client { get; set; }
+
+        public int HubID { get; set; }
+        public Hub Hub { get; set; }
+
+        public int SubHubID { get; set; }
+        public Subhub SubHub { get; set; }
+
         public string OMS { get; set; }
+        public string TypeOfFlow { get; set; }
+        public bool UAT { get; set; }
 
         public string Tag21 { get; set; }
         public string Tag48 { get; set; }

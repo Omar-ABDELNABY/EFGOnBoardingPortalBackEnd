@@ -11,6 +11,6 @@ namespace Utilities
         public DateTime expiration { get; set; }
         public bool success { get; set; }
         public Claim[] claims { get; set; }
-        //public ApplicationUser User { get; set; }
+        public bool RememberMe { get; set; }
     }
 }
