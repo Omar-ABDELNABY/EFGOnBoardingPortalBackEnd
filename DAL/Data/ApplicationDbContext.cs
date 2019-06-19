@@ -24,9 +24,9 @@ namespace DAL
         {
             base.OnModelCreating(builder);
             builder.Entity<Connection>().HasOne(c => c.Initiator);
-            builder.Entity<Connection>().HasOne(c => c.ConnClient);
-            builder.Entity<Connection>().HasOne(c => c.ConnHub);
-            builder.Entity<Connection>().HasOne(c => c.ConnSubHub);
+            builder.Entity<Connection>().HasOne(c => c.Client);
+            builder.Entity<Connection>().HasOne(c => c.Hub);
+            builder.Entity<Connection>().HasOne(c => c.SubHub);
 
 
             #region Seed Data
@@ -48,6 +48,13 @@ namespace DAL
                 PasswordHash = hasher.HashPassword(null, "Efg12#$"),
                 SecurityStamp = string.Empty
             });
+            builder.Entity<Hub>().HasData(
+                        new { ID = 1,  HubName = "Bloomberg ESMX" },
+                        new { ID = 2, HubName = "Bloomberg ESMX NET" },
+                        new { ID = 3, HubName = "Reuters Autex" },
+                        new { ID = 4, HubName = "Reuters Normal" },
+                        new { ID = 5, HubName = "Fidessa" }
+                    );
             #endregion
 
         }

@@ -4,14 +4,16 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190617113504_fifthTags")]
+    partial class fifthTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,19 +86,19 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
-                        new { Id = "9497f75b-ad24-4c82-84b6-0f9d61652aa8", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "6c293b1f-ece7-4800-94f4-ea0dcea3fd92", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, InitiatorType = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAEH3XJ9RRIoke4o8tcLt9fWUwUwAN6kZMyNi/+/zhTx50xEE5G4xEKoFmU0XrdiUDlQ==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
+                        new { Id = "2cdf0957-f866-4ee7-a25d-bccf6c244f1b", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "43332293-b17e-4371-aafd-ae07d068e297", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, InitiatorType = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAEJwotDuTh7zsp+lNhAGpqQK1biXpsSPG40owMTv/Iw/bMF2IQARPqXokc93SzDRgDA==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
                     );
                 });
 
             modelBuilder.Entity("DAL.Client", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("ClientID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("ClientName");
 
-                    b.HasKey("ID");
+                    b.HasKey("ClientID");
 
                     b.ToTable("Clients");
                 });
@@ -109,17 +111,17 @@ namespace DAL.Migrations
 
                     b.Property<bool>("Approval");
 
-                    b.Property<int>("ClientID");
+                    b.Property<int?>("ConnClientClientID");
+
+                    b.Property<int?>("ConnHubHubID");
+
+                    b.Property<int?>("ConnSubHubSubhubID");
 
                     b.Property<bool>("Deactivated");
-
-                    b.Property<int>("HubID");
 
                     b.Property<string>("InitiatorId");
 
                     b.Property<string>("OMS");
-
-                    b.Property<int>("SubHubID");
 
                     b.Property<string>("Tag1");
 
@@ -139,53 +141,41 @@ namespace DAL.Migrations
 
                     b.Property<string>("TargetRegion");
 
-                    b.Property<string>("TypeOfFlow");
-
-                    b.Property<bool>("UAT");
-
                     b.HasKey("ConnectionID");
 
-                    b.HasIndex("ClientID");
+                    b.HasIndex("ConnClientClientID");
 
-                    b.HasIndex("HubID");
+                    b.HasIndex("ConnHubHubID");
+
+                    b.HasIndex("ConnSubHubSubhubID");
 
                     b.HasIndex("InitiatorId");
-
-                    b.HasIndex("SubHubID");
 
                     b.ToTable("Connections");
                 });
 
             modelBuilder.Entity("DAL.Hub", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("HubID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("HubName");
 
-                    b.HasKey("ID");
+                    b.HasKey("HubID");
 
                     b.ToTable("Hubs");
-
-                    b.HasData(
-                        new { ID = 1 },
-                        new { ID = 2 },
-                        new { ID = 3 },
-                        new { ID = 4 },
-                        new { ID = 5 }
-                    );
                 });
 
             modelBuilder.Entity("DAL.Subhub", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("SubhubID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("SubhubName");
 
-                    b.HasKey("ID");
+                    b.HasKey("SubhubID");
 
                     b.ToTable("SubHubs");
                 });
@@ -309,24 +299,21 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Connection", b =>
                 {
-                    b.HasOne("DAL.Client", "Client")
+                    b.HasOne("DAL.Client", "ConnClient")
                         .WithMany()
-                        .HasForeignKey("ClientID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ConnClientClientID");
 
-                    b.HasOne("DAL.Hub", "Hub")
+                    b.HasOne("DAL.Hub", "ConnHub")
                         .WithMany()
-                        .HasForeignKey("HubID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ConnHubHubID");
+
+                    b.HasOne("DAL.Subhub", "ConnSubHub")
+                        .WithMany()
+                        .HasForeignKey("ConnSubHubSubhubID");
 
                     b.HasOne("DAL.ApplicationUser", "Initiator")
                         .WithMany()
                         .HasForeignKey("InitiatorId");
-
-                    b.HasOne("DAL.Subhub", "SubHub")
-                        .WithMany()
-                        .HasForeignKey("SubHubID")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

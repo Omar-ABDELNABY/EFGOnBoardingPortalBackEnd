@@ -37,7 +37,8 @@ namespace DAL
                     success = true,
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
-                    claims = claims
+                    claims = claims,
+                    RememberMe = model.RememberMe
                 };
             }
             return new LoginResponse() { success = false };

@@ -6,7 +6,7 @@ namespace DAL
 {
     public class Hub
     {
-        public int HubID { get; set; }
-        public string HubName { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
     }
 }

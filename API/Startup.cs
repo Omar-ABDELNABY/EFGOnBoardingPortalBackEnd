@@ -68,6 +68,7 @@ namespace API
                 builder =>
                 {
                     builder.WithOrigins("http://localhost:4200",
+                                        "http://localhost:4200/",
                                         "http://www.example.com")
                                         .AllowAnyHeader()
                                         .AllowAnyMethod();
