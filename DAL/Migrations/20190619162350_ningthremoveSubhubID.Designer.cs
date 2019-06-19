@@ -4,14 +4,16 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190619162350_ningthremoveSubhubID")]
+    partial class ningthremoveSubhubID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,7 +86,7 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
-                        new { Id = "e0d47c3c-a970-469b-bf3e-5a66750cc82b", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "03a72d96-ef35-4c70-9ad4-d29de7128f6c", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, InitiatorType = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAEER8Woikpke8Ta8VfmW4b1LMIPOCyLXl7kpES3sQN+mK0/HnL10gHUWVh4EaIOtPqg==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
+                        new { Id = "20e4b383-ad6e-4aa9-bbe1-464c6a3f66df", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "15d3d0a8-463e-495e-b519-fd1fed967631", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, InitiatorType = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAENTzk61pgyXsVZ1Og6z6PFDQENMpx072SbDN5wCeeSw+aoxqYB2TZfb3WYiJ7PGkrg==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
                     );
                 });
 
@@ -119,7 +121,7 @@ namespace DAL.Migrations
 
                     b.Property<string>("OMS");
 
-                    b.Property<int?>("SubHubID");
+                    b.Property<int>("SubHubID");
 
                     b.Property<string>("Tag1");
 
@@ -169,11 +171,11 @@ namespace DAL.Migrations
                     b.ToTable("Hubs");
 
                     b.HasData(
-                        new { ID = 1, Name = "Bloomberg ESMX" },
-                        new { ID = 2, Name = "Bloomberg ESMX NET" },
-                        new { ID = 3, Name = "Reuters Autex" },
-                        new { ID = 4, Name = "Reuters Normal" },
-                        new { ID = 5, Name = "Fidessa" }
+                        new { ID = 1 },
+                        new { ID = 2 },
+                        new { ID = 3 },
+                        new { ID = 4 },
+                        new { ID = 5 }
                     );
                 });
 
@@ -325,7 +327,8 @@ namespace DAL.Migrations
 
                     b.HasOne("DAL.Subhub", "SubHub")
                         .WithMany()
-                        .HasForeignKey("SubHubID");
+                        .HasForeignKey("SubHubID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

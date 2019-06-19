@@ -20,7 +20,7 @@ namespace DAL
         public int HubID { get; set; }
         public Hub Hub { get; set; }
 
-        public int SubHubID { get; set; }
+        public int? SubHubID { get; set; }
         public Subhub SubHub { get; set; }
 
         public string OMS { get; set; }

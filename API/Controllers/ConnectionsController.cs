@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using DAL.Controls;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {

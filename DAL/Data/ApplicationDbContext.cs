@@ -49,11 +49,11 @@ namespace DAL
                 SecurityStamp = string.Empty
             });
             builder.Entity<Hub>().HasData(
-                        new { ID = 1,  HubName = "Bloomberg ESMX" },
-                        new { ID = 2, HubName = "Bloomberg ESMX NET" },
-                        new { ID = 3, HubName = "Reuters Autex" },
-                        new { ID = 4, HubName = "Reuters Normal" },
-                        new { ID = 5, HubName = "Fidessa" }
+                        new { ID = 1, Name = "Bloomberg ESMX" },
+                        new { ID = 2, Name = "Bloomberg ESMX NET" },
+                        new { ID = 3, Name = "Reuters Autex" },
+                        new { ID = 4, Name = "Reuters Normal" },
+                        new { ID = 5, Name = "Fidessa" }
                     );
             #endregion
 
