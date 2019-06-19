@@ -16,7 +16,6 @@ namespace API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("_myAllowSpecificOrigins")]
     public class ConnectionsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -102,6 +101,7 @@ namespace API.Controllers
 
         // POST: api/Connections
         [HttpPost]
+        [EnableCors("_myAllowSpecificOrigins")]
         public async Task<IActionResult> PostConnection([FromBody] Connection connection)
         {
             if (!ModelState.IsValid)
