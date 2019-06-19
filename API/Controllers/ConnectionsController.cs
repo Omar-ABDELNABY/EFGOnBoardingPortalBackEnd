@@ -9,7 +9,7 @@ using DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Cors;
+using DAL.Controls;
 
 namespace API.Controllers
 {
@@ -41,6 +41,31 @@ namespace API.Controllers
             return _context.Connections;
         }
 
+        [HttpGet]
+        [Route("userConnections")]
+        public  IActionResult GetUserConnections()
+        {
+
+            var claims = User.Claims;
+            var userId = claims.ToArray()[0].Value;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var connection =  _context.Connections.Where(p=>p.Initiator.Id==userId).ToList();
+
+            if (connection == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(connection);
+        }
+
+
+
+
         // GET: api/Connections/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetConnection([FromRoute] int id)
@@ -67,7 +92,6 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutConnection([FromRoute] int id, [FromBody] Connection connection)
         {
-            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -110,8 +134,9 @@ namespace API.Controllers
             }
 
             connection.Initiator = await GetCurrentUserAsync();
-            _context.Connections.Add(connection);
-            await _context.SaveChangesAsync();
+            //_context.Connections.Add(connection);
+            await ConnectionService.AddConnection(_context,connection);
+            //await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetConnection", new { id = connection.ConnectionID }, connection);
         }
