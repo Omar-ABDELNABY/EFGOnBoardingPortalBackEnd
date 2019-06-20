@@ -8,6 +8,7 @@ using Utilities;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace DAL
 {
@@ -18,17 +19,21 @@ namespace DAL
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
-                var claims = new Claim[]
+                List<Claim> claims = new List<Claim>()
                 {
                     new Claim(JwtRegisteredClaimNames.Sid,user.Id),
                     new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
+                var roles = await userManager.GetRolesAsync(user);
+                //This is a very important line -> it adds the ROLES in the PAYLOAD of the TOKEN :)
+                claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
+
                 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySuperSecureKey"));
                 var token = new JwtSecurityToken(
                     issuer: "http://oec.com",
                     audience: "http://oec.com",
-                    expires: DateTime.UtcNow.AddHours(1),
+                    expires: DateTime.UtcNow.AddMinutes(60),
                     claims: claims,
                     signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
                     );
@@ -37,7 +42,7 @@ namespace DAL
                     success = true,
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
-                    claims = claims,
+                    claims = claims.ToArray(),
                     RememberMe = model.RememberMe
                 };
             }

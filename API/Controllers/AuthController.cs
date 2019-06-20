@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
@@ -57,6 +58,7 @@ namespace API.Controllers
         [HttpPost]
         [Route("Register")]
         [EnableCors("_myAllowSpecificOrigins")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)

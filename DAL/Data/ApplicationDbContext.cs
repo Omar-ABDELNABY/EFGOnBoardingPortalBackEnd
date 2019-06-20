@@ -40,6 +40,7 @@ namespace DAL
             var hasher = new PasswordHasher<ApplicationUser>();
             builder.Entity<ApplicationUser>().HasData(new ApplicationUser
             {
+                Id = "1234567890",
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
                 Email = "admin@efg.com",
@@ -55,6 +56,9 @@ namespace DAL
                         new { ID = 4, Name = "Reuters Normal" },
                         new { ID = 5, Name = "Fidessa" }
                     );
+            builder.Entity<IdentityUserRole<string>>().HasData(
+                    new { UserId = "1234567890", RoleId="1" }    
+                );
             #endregion
 
         }
