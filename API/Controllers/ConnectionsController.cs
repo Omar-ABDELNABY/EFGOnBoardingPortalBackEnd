@@ -54,7 +54,17 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var connection =  _context.Connections.Where(p=>p.Initiator.Id==userId).ToList();
+            var connection = _context.Connections.Where(c => c.Initiator.Id == userId && c.Deactivated == false)
+                .Include(c => c.Client)
+                .Include(c => c.Hub)
+                .Include(c => c.SubHub)
+                .ToList();
+            //var connection = (from c in _context.Connections
+            //                  join h in _context.Hubs on c.HubID equals h.ID
+            //                  join s in _context.SubHubs on c.SubHubID equals s.ID
+            //                  join cl in _context.Clients on c.ClientID equals cl.ID
+            //                  select new { conn = c, hub = h.Name, subhub = s, client = cl })
+            //             .ToList();
 
             if (connection == null)
             {
@@ -157,7 +167,8 @@ namespace API.Controllers
                 return NotFound();
             }
 
-            _context.Connections.Remove(connection);
+            //_context.Connections.Remove(connection);
+            connection.Deactivated = true;
             await _context.SaveChangesAsync();
 
             return Ok(connection);
