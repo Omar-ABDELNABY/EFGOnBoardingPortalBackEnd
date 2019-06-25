@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DAL
+namespace Utilities
 {
-    public class Subhub
+    public class Hub
     {
         public int ID { get; set; }
         public string Name { get; set; }

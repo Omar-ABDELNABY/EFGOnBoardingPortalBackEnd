@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using DAL.Controls;
 using Microsoft.AspNetCore.Cors;
+using Utilities;
 
 namespace API.Controllers
 {

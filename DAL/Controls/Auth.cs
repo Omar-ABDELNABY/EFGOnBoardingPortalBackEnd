@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Transactions;
 
 namespace DAL
 {
@@ -63,10 +64,52 @@ namespace DAL
                 EmailConfirmed = true,
                 PasswordHash = hasher.HashPassword(null, model.Password),
             };
-            var result = await userManager.CreateAsync(user, model.Password);
-            var result2 = await userManager.AddToRoleAsync(user, model.Type.ToString("G"));
 
-            if (result.Succeeded && result2.Succeeded)
+
+            #region without Transaction
+            IdentityResult result;
+            IdentityResult result2 = null;
+            result = await userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+                result2 = await userManager.AddToRoleAsync(user, model.Type.ToString("G"));
+            #endregion
+
+            #region Transaction
+            //using (var scope = new TransactionScope(
+            //    TransactionScopeOption.Required,
+            //    new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            //{
+            //    try
+            //    {
+            //        // Run an EF Core command in the transaction
+            //        var result = await userManager.CreateAsync(user, model.Password);
+            //        var result2 = await userManager.AddToRoleAsync(user, model.Type.ToString("G"));
+
+            //        // Commit transaction if all commands succeed, transaction will auto-rollback
+            //        // when disposed if either commands fails
+            //        scope.Complete();
+            //        if (result.Succeeded & result2.Succeeded)
+            //        {
+            //            return await Login(userManager, new LoginModel() { Username = model.Username, Password = model.Password });
+            //        }
+            //        else
+            //        {
+            //            return new LoginResponse() { success = false };
+            //        }
+
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // TODO: Handle failure
+            //        return new LoginResponse() { success = false };
+            //        //return BadRequest("Registeration failed");
+            //    }
+
+            //}
+            #endregion
+
+            #region without Transaction
+            if (result.Succeeded & result2?.Succeeded??false)
             {
                 return await Login(userManager, new LoginModel() { Username = model.Username, Password = model.Password });
             }
@@ -74,6 +117,13 @@ namespace DAL
             {
                 return new LoginResponse() { success = false };
             }
+            #endregion
+
+        }
+
+        private static LoginResponse BadRequest(string v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

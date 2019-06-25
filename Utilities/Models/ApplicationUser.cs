@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Utilities;
 
-namespace DAL
+namespace Utilities
 {
     public class ApplicationUser : IdentityUser
     {
@@ -17,6 +17,7 @@ namespace DAL
         public bool Deactivated { get; set; }
         public bool Approval { get; set; }
         public InitiatorType InitiatorType { get; set; }
+
 
     }
 
