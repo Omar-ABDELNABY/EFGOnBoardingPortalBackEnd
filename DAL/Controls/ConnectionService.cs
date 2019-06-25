@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Controls
 {
-    public  class ConnectionService
+    public class ConnectionService
     {
         private readonly ApplicationDbContext context;
         private UserManager<ApplicationUser> userManager;
@@ -58,16 +58,16 @@ namespace DAL.Controls
 
 
 
-        public async Task PutConnection(int id,  Connection connection)
+        public async Task PutConnection(int id, Connection connection)
         {
-            
+
             context.Entry(connection).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            
+            await context.SaveChangesAsync();
+
         }
 
 
-        public async Task<Connection> DeleteConnection( int id)
+        public async Task<Connection> DeleteConnection(int id)
         {
             var connection = await context.Connections.FindAsync(id);
             if (connection != null)
@@ -79,11 +79,11 @@ namespace DAL.Controls
 
         }
 
-       
+
         public bool ConnectionExists(int id)
         {
             return context.Connections.Any(e => e.ConnectionID == id);
-          
+
         }
 
     }
