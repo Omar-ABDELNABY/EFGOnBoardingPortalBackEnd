@@ -39,7 +39,7 @@ namespace DAL.Controls
         }
 
 
-        public List<Connection> GetUserConnections(string userId)
+        public IEnumerable<Connection> GetUserConnections(string userId)
         {
             var connection = context.Connections.Where(c => c.Initiator.Id == userId && c.Deactivated == false)
              .Include(c => c.Client)
@@ -52,15 +52,7 @@ namespace DAL.Controls
 
         public async Task<Connection> GetConnection(int id)
         {
-
-           // var claims = User.Claims;
-          //  var userId = claims.ToArray()[0].Value;
-           
-
             var connection = await context.Connections.FindAsync(id);
-
-
-
             return connection;
         }
 

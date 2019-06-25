@@ -18,6 +18,7 @@ namespace DAL
         public static async Task<LoginResponse> Login(UserManager<ApplicationUser> userManager, LoginModel model)
         {
             var user = await userManager.FindByNameAsync(model.Username);
+            var s = await userManager.CheckPasswordAsync(user, model.Password);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 List<Claim> claims = new List<Claim>()
