@@ -21,6 +21,19 @@ namespace DAL
         public virtual DbSet<Connection> Connections { get; set; }
         public virtual DbSet<Email> Emails { get; set; }
 
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+            //var builder = new ConfigurationBuilder();
+            //builder.SetBasePath(Directory.GetCurrentDirectory());
+            //builder.AddJsonFile("appsettings.json");
+            //IConfiguration Configuration = builder.Build();
+
+            //optionsBuilder.UseSqlServer(
+            //    GetConnectionString("DefaultConnection"));
+            //base.OnConfiguring(optionsBuilder);
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

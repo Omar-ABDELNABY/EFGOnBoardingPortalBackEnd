@@ -8,5 +8,7 @@ namespace Utilities
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public ICollection<ApplicationUser> ApplicationUsers { get; set; } = new HashSet<ApplicationUser>();
+
     }
 }

@@ -20,27 +20,24 @@ namespace API.Controllers
     [ApiController]
     public class ConnectionsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private UserManager<ApplicationUser> userManager;
-        private SignInManager<ApplicationUser> signInManager;
+        private ConnectionService connectionService;
 
         public ConnectionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            _context = context;
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+            connectionService = new ConnectionService(context, userManager, signInManager);
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() {
+          
             var userId = User.Claims.ToArray()[0].Value;
-            return userManager.FindByIdAsync(userId);
+            return connectionService.GetCurrentUserAsync(userId);
     }
 
         // GET: api/Connections
         [HttpGet]
         public IEnumerable<Connection> GetConnections()
         {
-            return _context.Connections;
+            return connectionService.GetConnections();
         }
 
         [HttpGet]
@@ -55,24 +52,13 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var connection = _context.Connections.Where(c => c.Initiator.Id == userId && c.Deactivated == false)
-                .Include(c => c.Client)
-                .Include(c => c.Hub)
-                .Include(c => c.SubHub)
-                .ToList();
-            //var connection = (from c in _context.Connections
-            //                  join h in _context.Hubs on c.HubID equals h.ID
-            //                  join s in _context.SubHubs on c.SubHubID equals s.ID
-            //                  join cl in _context.Clients on c.ClientID equals cl.ID
-            //                  select new { conn = c, hub = h.Name, subhub = s, client = cl })
-            //             .ToList();
-
-            if (connection == null)
+           
+            if (connectionService.GetUserConnections(userId) == null)
             {
                 return NotFound();
             }
 
-            return Ok(connection);
+            return Ok(connectionService.GetUserConnections(userId));
         }
 
 
@@ -90,7 +76,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var connection = await _context.Connections.FindAsync(id);
+            var connection = await connectionService.GetConnection(id);
 
             if (connection == null)
             {
@@ -113,12 +99,9 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(connection).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await connectionService.PutConnection(id, connection);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -144,11 +127,8 @@ namespace API.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             connection.Initiator = await GetCurrentUserAsync();
-            //_context.Connections.Add(connection);
-            await ConnectionService.AddConnection(_context,connection);
-            //await _context.SaveChangesAsync();
+             await connectionService.AddConnection(connection);
 
             return CreatedAtAction("GetConnection", new { id = connection.ConnectionID }, connection);
         }
@@ -161,23 +141,17 @@ namespace API.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var connection = await _context.Connections.FindAsync(id);
+            var connection = await connectionService.DeleteConnection(id);
             if (connection == null)
             {
                 return NotFound();
             }
-
-            //_context.Connections.Remove(connection);
-            connection.Deactivated = true;
-            await _context.SaveChangesAsync();
-
             return Ok(connection);
         }
 
         private bool ConnectionExists(int id)
         {
-            return _context.Connections.Any(e => e.ConnectionID == id);
+            return connectionService.ConnectionExists(id);
         }
     }
 }
