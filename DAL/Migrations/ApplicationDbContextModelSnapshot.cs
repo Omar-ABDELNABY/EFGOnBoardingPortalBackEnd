@@ -215,7 +215,7 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
-                        new { Id = "1234567890", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "4b5c080f-345a-4317-849e-e4b66fcc6956", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAEGPR3WK/ZhdniOnkaF8RUmS+5CEnR+G8qAwTtFXh3TT8s6veXXVPhOiFDJl2bSSkHw==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
+                        new { Id = "1234567890", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "9210e239-b17d-414f-ad12-3beefc270d38", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAEAB2R8JuweXzSZkAh54cnBMn8hInSI5eRvLyi+0s+17p10YHkehafKoGMVtwv3mTMg==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
                     );
                 });
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class firstTrial : Migration
+    public partial class _1AfterReset : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,6 +20,83 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Emails",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    From = table.Column<string>(nullable: false),
+                    FromPassword = table.Column<string>(nullable: false),
+                    To = table.Column<string>(nullable: false),
+                    Subject = table.Column<string>(nullable: true),
+                    Body = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Emails", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Hubs",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hubs", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubHubs",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubHubs", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,68 +123,32 @@ namespace DAL.Migrations
                     TraderContact = table.Column<int>(nullable: false),
                     ITContact = table.Column<int>(nullable: false),
                     Deactivated = table.Column<bool>(nullable: false),
-                    Approval = table.Column<bool>(nullable: false)
+                    Approval = table.Column<bool>(nullable: false),
+                    HubID = table.Column<int>(nullable: true),
+                    SubhubID = table.Column<int>(nullable: true),
+                    ClientID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    ClientID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.ClientID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Hubs",
-                columns: table => new
-                {
-                    HubID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hubs", x => x.HubID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SubHubs",
-                columns: table => new
-                {
-                    SubhubID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubHubs", x => x.SubhubID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_AspNetUsers_Clients_ClientID",
+                        column: x => x.ClientID,
+                        principalTable: "Clients",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Hubs_HubID",
+                        column: x => x.HubID,
+                        principalTable: "Hubs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_SubHubs_SubhubID",
+                        column: x => x.SubhubID,
+                        principalTable: "SubHubs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -203,36 +244,49 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TargetRegion = table.Column<string>(nullable: true),
                     InitiatorId = table.Column<string>(nullable: true),
-                    ConnClientClientID = table.Column<int>(nullable: true),
-                    ConnHubHubID = table.Column<int>(nullable: true),
-                    ConnSubHubSubhubID = table.Column<int>(nullable: true)
+                    ClientID = table.Column<int>(nullable: false),
+                    HubID = table.Column<int>(nullable: false),
+                    SubHubID = table.Column<int>(nullable: true),
+                    OMS = table.Column<string>(nullable: true),
+                    TypeOfFlow = table.Column<string>(nullable: true),
+                    UAT = table.Column<bool>(nullable: false),
+                    Tag21 = table.Column<string>(nullable: true),
+                    Tag48 = table.Column<string>(nullable: true),
+                    Tag55 = table.Column<string>(nullable: true),
+                    Tag100 = table.Column<string>(nullable: true),
+                    Tag207 = table.Column<string>(nullable: true),
+                    Tag1 = table.Column<string>(nullable: true),
+                    Tag30 = table.Column<string>(nullable: true),
+                    Tag115 = table.Column<string>(nullable: true),
+                    Deactivated = table.Column<bool>(nullable: false),
+                    Approval = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Connections", x => x.ConnectionID);
                     table.ForeignKey(
-                        name: "FK_Connections_Clients_ConnClientClientID",
-                        column: x => x.ConnClientClientID,
+                        name: "FK_Connections_Clients_ClientID",
+                        column: x => x.ClientID,
                         principalTable: "Clients",
-                        principalColumn: "ClientID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Connections_Hubs_ConnHubHubID",
-                        column: x => x.ConnHubHubID,
+                        name: "FK_Connections_Hubs_HubID",
+                        column: x => x.HubID,
                         principalTable: "Hubs",
-                        principalColumn: "HubID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Connections_SubHubs_ConnSubHubSubhubID",
-                        column: x => x.ConnSubHubSubhubID,
-                        principalTable: "SubHubs",
-                        principalColumn: "SubhubID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Connections_AspNetUsers_InitiatorId",
                         column: x => x.InitiatorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Connections_SubHubs_SubHubID",
+                        column: x => x.SubHubID,
+                        principalTable: "SubHubs",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -246,6 +300,28 @@ namespace DAL.Migrations
                     { "3", null, "Hub", "HUB" },
                     { "4", null, "Subhub", "SUBHUB" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Approval", "ClientID", "ConcurrencyStamp", "Deactivated", "Email", "EmailConfirmed", "Firstname", "HubID", "ITContact", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SubhubID", "TraderContact", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "1234567890", 0, false, null, "9210e239-b17d-414f-ad12-3beefc270d38", false, "admin@efg.com", true, null, null, 0, null, false, null, "ADMIN@EFG.COM", "ADMIN", "AQAAAAEAACcQAAAAEAB2R8JuweXzSZkAh54cnBMn8hInSI5eRvLyi+0s+17p10YHkehafKoGMVtwv3mTMg==", null, false, "", null, 0, false, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Hubs",
+                columns: new[] { "ID", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Bloomberg EMSX" },
+                    { 2, "Bloomberg EMSX NET" },
+                    { 3, "Reuters Autex" },
+                    { 4, "Reuters REDI" },
+                    { 5, "Fidessa" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                values: new object[] { "1234567890", "1" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -275,6 +351,16 @@ namespace DAL.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_ClientID",
+                table: "AspNetUsers",
+                column: "ClientID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_HubID",
+                table: "AspNetUsers",
+                column: "HubID");
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
@@ -287,24 +373,29 @@ namespace DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Connections_ConnClientClientID",
-                table: "Connections",
-                column: "ConnClientClientID");
+                name: "IX_AspNetUsers_SubhubID",
+                table: "AspNetUsers",
+                column: "SubhubID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Connections_ConnHubHubID",
+                name: "IX_Connections_ClientID",
                 table: "Connections",
-                column: "ConnHubHubID");
+                column: "ClientID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Connections_ConnSubHubSubhubID",
+                name: "IX_Connections_HubID",
                 table: "Connections",
-                column: "ConnSubHubSubhubID");
+                column: "HubID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Connections_InitiatorId",
                 table: "Connections",
                 column: "InitiatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Connections_SubHubID",
+                table: "Connections",
+                column: "SubHubID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -328,7 +419,13 @@ namespace DAL.Migrations
                 name: "Connections");
 
             migrationBuilder.DropTable(
+                name: "Emails");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Clients");
@@ -338,9 +435,6 @@ namespace DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "SubHubs");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
         }
     }
 }
