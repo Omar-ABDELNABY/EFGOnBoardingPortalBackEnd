@@ -15,6 +15,13 @@ namespace DAL
 {
     public static class Auth
     {
+
+        public static ApplicationUser GetUserByID(ApplicationDbContext context, string userId)
+        {
+            return context.Users.Find(userId);
+                
+        }
+
         public static async Task<LoginResponse> Login(UserManager<ApplicationUser> userManager, LoginModel model)
         {
             var user = await userManager.FindByNameAsync(model.Username);

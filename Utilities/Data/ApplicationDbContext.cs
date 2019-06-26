@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Utilities;
 
-namespace DAL
+namespace Utilities
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
@@ -22,8 +22,8 @@ namespace DAL
         public virtual DbSet<Email> Emails { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
 
             //var builder = new ConfigurationBuilder();
             //builder.SetBasePath(Directory.GetCurrentDirectory());
@@ -33,7 +33,7 @@ namespace DAL
             //optionsBuilder.UseSqlServer(
             //    GetConnectionString("DefaultConnection"));
             //base.OnConfiguring(optionsBuilder);
-        }
+        //}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -64,8 +64,8 @@ namespace DAL
                 SecurityStamp = string.Empty
             });
             builder.Entity<Hub>().HasData(
-                        new { ID = 1, Name = "Bloomberg ESMX" },
-                        new { ID = 2, Name = "Bloomberg ESMX NET" },
+                        new { ID = 1, Name = "Bloomberg EMSX" },
+                        new { ID = 2, Name = "Bloomberg EMSX NET" },
                         new { ID = 3, Name = "Reuters Autex" },
                         new { ID = 4, Name = "Reuters Normal" },
                         new { ID = 5, Name = "Fidessa" }

@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DAL;
+using BLL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
-using DAL.Controls;
 using Microsoft.AspNetCore.Cors;
 using Utilities;
 
@@ -20,24 +19,27 @@ namespace API.Controllers
     [ApiController]
     public class ConnectionsController : ControllerBase
     {
-        private ConnectionService connectionService;
+        public UserManager<ApplicationUser> userManager { get; set; }
+        public SignInManager<ApplicationUser> signInManager { get; set; }
 
         public ConnectionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            connectionService = new ConnectionService(context, userManager, signInManager);
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
-        private Task<ApplicationUser> GetCurrentUserAsync() {
-          
-            var userId = User.Claims.ToArray()[0].Value;
-            return connectionService.GetCurrentUserAsync(userId);
+        private ApplicationUser GetCurrentUser() {
+
+            string userId = User.Claims.ToArray()[0].Value;
+            return AuthenticationLogic.GetUserByID(userId);
     }
 
         // GET: api/Connections
+        [Authorize(Roles="Admin")]
         [HttpGet]
         public IEnumerable<Connection> GetConnections()
         {
-            return connectionService.GetConnections();
+            return ConnectionsLogic.GetConnections();
         }
 
         [HttpGet]
@@ -52,13 +54,14 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
+            var connections = ConnectionsLogic.GetUserConnections(userId);
            
-            if (connectionService.GetUserConnections(userId) == null)
+            if (connections == null)
             {
                 return NotFound();
             }
 
-            return Ok(connectionService.GetUserConnections(userId));
+            return Ok(connections);
         }
 
 
@@ -66,7 +69,7 @@ namespace API.Controllers
 
         // GET: api/Connections/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetConnection([FromRoute] int id)
+        public IActionResult GetConnection([FromRoute] int id)
         {
             
            var claims =  User.Claims;
@@ -76,7 +79,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var connection = await connectionService.GetConnection(id);
+            var connection = ConnectionsLogic.GetConnection(userId, id);
 
             if (connection == null)
             {
@@ -87,6 +90,7 @@ namespace API.Controllers
         }
 
         // PUT: api/Connections/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutConnection([FromRoute] int id, [FromBody] Connection connection)
         {
@@ -99,36 +103,23 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
-            try
-            {
-                await connectionService.PutConnection(id, connection);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ConnectionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            if (await ConnectionsLogic.PutConnection(connection))
+                return Ok(connection);
+            return NotFound();
         }
 
         // POST: api/Connections
         [HttpPost]
         [EnableCors("_myAllowSpecificOrigins")]
-        public async Task<IActionResult> PostConnection([FromBody] Connection connection)
+        public IActionResult PostConnection([FromBody] Connection connection)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            connection.Initiator = await GetCurrentUserAsync();
-             await connectionService.AddConnection(connection);
+
+            connection.Initiator = GetCurrentUser();
+             ConnectionsLogic.AddConnection(connection);
 
             return CreatedAtAction("GetConnection", new { id = connection.ConnectionID }, connection);
         }
@@ -141,7 +132,7 @@ namespace API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var connection = await connectionService.DeleteConnection(id);
+            Connection connection = await ConnectionsLogic.DeleteConnection(id);
             if (connection == null)
             {
                 return NotFound();
@@ -151,7 +142,7 @@ namespace API.Controllers
 
         private bool ConnectionExists(int id)
         {
-            return connectionService.ConnectionExists(id);
+            return ConnectionsLogic.ConnectionExists(id);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DAL;
+using BLL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -34,7 +34,7 @@ namespace API.Controllers
         {
             if (ModelState.IsValid)
             {
-                LoginResponse res = await DAL.Auth.Login(userManager, model);
+                LoginResponse res = await AuthenticationLogic.Login(userManager, model);
                 await Authenticate(res.claims, res.RememberMe);
                 if (res.success)
                     return Ok(res);
@@ -63,7 +63,7 @@ namespace API.Controllers
         {
             if (ModelState.IsValid)
             {
-                LoginResponse res = await DAL.Auth.Register(userManager, signInManager, model);
+                LoginResponse res = await AuthenticationLogic.Register(userManager, signInManager, model);
                 if (res.success)
                     return Ok(res);
                 else
