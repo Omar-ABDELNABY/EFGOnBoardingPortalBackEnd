@@ -24,7 +24,10 @@ namespace Utilities
         public Subhub SubHub { get; set; }
 
         public string OMS { get; set; }
-        public string TypeOfFlow { get; set; }
+
+        public bool CARE { get; set; }
+        public bool DMA { get; set; }
+
         public bool UAT { get; set; }
 
         public string Tag21 { get; set; }
