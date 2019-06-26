@@ -66,7 +66,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("clientConnectionsBYAdmin{clientID}")]
+        [Route("clientConnectionsBYAdmin/{clientID}")]
         public IActionResult GetclientConnectionsBYAdmin([FromRoute] int clientID)
         {
             if (!ModelState.IsValid)
@@ -85,21 +85,22 @@ namespace API.Controllers
 
 
         [HttpGet]
-        [Route("clientConnectionsByHub{clientID}")]
-        public IActionResult GetclientConnectionsByHub([FromRoute] int clientID,[FromBody]int hubID)
+        [Route("clientConnectionsByHub/{clientID}")]
+        public async Task<IActionResult> GetclientConnectionsByHub([FromRoute] int clientID)
         {
+            var hubID = await GetCurrentUserAsync();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
 
-            if (connectionService.clientConnectionsByHub(clientID,hubID) == null)
+            if (connectionService.clientConnectionsByHub(clientID,hubID.Hub.ID) == null)
             {
                 return NotFound();
             }
 
-            return Ok(connectionService.clientConnectionsByHub(clientID,hubID));
+            return Ok(connectionService.clientConnectionsByHub(clientID,hubID.Hub.ID));
         }
 
 
