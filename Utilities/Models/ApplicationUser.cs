@@ -16,10 +16,14 @@ namespace Utilities
         public int ITContact { get; set; }
         public bool Deactivated { get; set; }
         public bool Approval { get; set; }
-       // public InitiatorType InitiatorType { get; set; }
-       public Hub Hub { get; set; }
-       public Subhub Subhub { get; set; }
-       public Client Client { get; set; }
+        // public InitiatorType InitiatorType { get; set; }
+
+        public int? HubID { get; set; }
+        public Hub Hub { get; set; }
+        public int? SubhubID { get; set; }
+        public Subhub Subhub { get; set; }
+        public int? ClientID { get; set; }
+        public Client Client { get; set; }
 
     }
 

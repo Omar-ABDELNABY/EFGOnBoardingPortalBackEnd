@@ -42,6 +42,10 @@ namespace DAL
             builder.Entity<Connection>().HasOne(c => c.Hub);
             builder.Entity<Connection>().HasOne(c => c.SubHub);
 
+            builder.Entity<ApplicationUser>().HasOne(u => u.Client);
+            builder.Entity<ApplicationUser>().HasOne(u => u.Hub);
+            builder.Entity<ApplicationUser>().HasOne(u => u.Subhub);
+
 
             #region Seed Data
             builder.Entity<IdentityRole>().HasData(
@@ -64,10 +68,10 @@ namespace DAL
                 SecurityStamp = string.Empty
             });
             builder.Entity<Hub>().HasData(
-                        new { ID = 1, Name = "Bloomberg ESMX" },
-                        new { ID = 2, Name = "Bloomberg ESMX NET" },
+                        new { ID = 1, Name = "Bloomberg EMSX" },
+                        new { ID = 2, Name = "Bloomberg EMSX NET" },
                         new { ID = 3, Name = "Reuters Autex" },
-                        new { ID = 4, Name = "Reuters Normal" },
+                        new { ID = 4, Name = "Reuters REDI" },
                         new { ID = 5, Name = "Fidessa" }
                     );
             builder.Entity<IdentityUserRole<string>>().HasData(

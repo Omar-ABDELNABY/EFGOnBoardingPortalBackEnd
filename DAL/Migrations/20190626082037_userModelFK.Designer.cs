@@ -4,14 +4,16 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190626082037_userModelFK")]
+    partial class userModelFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,7 +151,7 @@ namespace DAL.Migrations
 
                     b.Property<bool>("Approval");
 
-                    b.Property<int?>("ClientID");
+                    b.Property<int>("ClientID");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -163,7 +165,7 @@ namespace DAL.Migrations
 
                     b.Property<string>("Firstname");
 
-                    b.Property<int?>("HubID");
+                    b.Property<int>("HubID");
 
                     b.Property<int>("ITContact");
 
@@ -187,7 +189,7 @@ namespace DAL.Migrations
 
                     b.Property<string>("SecurityStamp");
 
-                    b.Property<int?>("SubhubID");
+                    b.Property<int>("SubhubID");
 
                     b.Property<int>("TraderContact");
 
@@ -215,7 +217,7 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
-                        new { Id = "1234567890", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "4b5c080f-345a-4317-849e-e4b66fcc6956", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAEGPR3WK/ZhdniOnkaF8RUmS+5CEnR+G8qAwTtFXh3TT8s6veXXVPhOiFDJl2bSSkHw==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
+                        new { Id = "1234567890", AccessFailedCount = 0, Approval = false, ClientID = 0, ConcurrencyStamp = "20c845a2-5961-42bf-8e8a-9c5b12e7be2e", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, HubID = 0, ITContact = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAENYFduEvCeCps65NVzfJ9l80/NMa/4AAfFUR2Lyauzad7kXZyIdpqjeqdBVynbgCCw==", PhoneNumberConfirmed = false, SecurityStamp = "", SubhubID = 0, TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
                     );
                 });
 
@@ -394,15 +396,18 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Utilities.Client", "Client")
                         .WithMany("ApplicationUsers")
-                        .HasForeignKey("ClientID");
+                        .HasForeignKey("ClientID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Utilities.Hub", "Hub")
                         .WithMany("ApplicationUsers")
-                        .HasForeignKey("HubID");
+                        .HasForeignKey("HubID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Utilities.Subhub", "Subhub")
                         .WithMany("ApplicationUsers")
-                        .HasForeignKey("SubhubID");
+                        .HasForeignKey("SubhubID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Utilities.Connection", b =>

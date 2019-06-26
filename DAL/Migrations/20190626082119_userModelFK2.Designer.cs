@@ -4,14 +4,16 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190626082119_userModelFK2")]
+    partial class userModelFK2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,7 +217,7 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
-                        new { Id = "1234567890", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "4b5c080f-345a-4317-849e-e4b66fcc6956", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAEGPR3WK/ZhdniOnkaF8RUmS+5CEnR+G8qAwTtFXh3TT8s6veXXVPhOiFDJl2bSSkHw==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
+                        new { Id = "1234567890", AccessFailedCount = 0, Approval = false, ConcurrencyStamp = "ec5641c9-660b-449f-be52-7c86675b9fa9", Deactivated = false, Email = "admin@efg.com", EmailConfirmed = true, ITContact = 0, LockoutEnabled = false, NormalizedEmail = "ADMIN@EFG.COM", NormalizedUserName = "ADMIN", PasswordHash = "AQAAAAEAACcQAAAAEBXtcEmZB42gzZqwer0T/Sk8n6PSkv3lzNtZ9MhGHSE5w7Nh4/zp/rQTBLu05a6Z3Q==", PhoneNumberConfirmed = false, SecurityStamp = "", TraderContact = 0, TwoFactorEnabled = false, UserName = "admin" }
                     );
                 });
 
