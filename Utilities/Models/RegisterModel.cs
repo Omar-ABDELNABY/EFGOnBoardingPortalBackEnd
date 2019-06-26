@@ -19,6 +19,8 @@ namespace Utilities
         [Required(ErrorMessage = "Type is Required")]
         public InitiatorType Type { get; set; }
 
+        public int? ClHubSubID { get; set; }            //Client or Hub or Subhub ID
+
     }
 
     public enum InitiatorType

@@ -63,8 +63,14 @@ namespace DAL
                 Email = model.Email,
                 NormalizedEmail = model.Email.ToUpper(),
                 EmailConfirmed = true,
-                PasswordHash = hasher.HashPassword(null, model.Password),
+                PasswordHash = hasher.HashPassword(null, model.Password)
             };
+            if (model.Type == InitiatorType.Client)
+                user.ClientID = model.ClHubSubID;
+            else if(model.Type == InitiatorType.Hub)
+                user.HubID = model.ClHubSubID;
+            else if (model.Type == InitiatorType.Subhub)
+                user.SubhubID = model.ClHubSubID;
 
 
             #region without Transaction
