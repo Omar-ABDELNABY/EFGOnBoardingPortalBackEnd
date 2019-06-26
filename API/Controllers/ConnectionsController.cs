@@ -21,10 +21,14 @@ namespace API.Controllers
     public class ConnectionsController : ControllerBase
     {
         private ConnectionService connectionService;
+        UserManager<ApplicationUser> userManager;
+        SignInManager<ApplicationUser> signInManager;
 
         public ConnectionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             connectionService = new ConnectionService(context, userManager, signInManager);
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() {
@@ -127,8 +131,19 @@ namespace API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            connection.Initiator = await GetCurrentUserAsync();
-             await connectionService.AddConnection(connection);
+            ApplicationUser curUser = await GetCurrentUserAsync();
+            connection.Initiator = curUser;
+             
+            var roles = await userManager.GetRolesAsync(curUser);
+            string role = roles[0];
+            if (role == InitiatorType.Client.ToString("G"))
+                connection.ClientID = (int) curUser.ClientID;
+            else if (role == InitiatorType.Hub.ToString("G"))
+                connection.HubID = (int)curUser.HubID;
+            else if (role == InitiatorType.Subhub.ToString("G"))
+                connection.SubHubID = (int)curUser.SubhubID;
+
+            await connectionService.AddConnection(connection);
 
             return CreatedAtAction("GetConnection", new { id = connection.ConnectionID }, connection);
         }

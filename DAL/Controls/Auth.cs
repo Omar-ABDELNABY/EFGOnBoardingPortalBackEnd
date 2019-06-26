@@ -21,11 +21,14 @@ namespace DAL
             var s = await userManager.CheckPasswordAsync(user, model.Password);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
+                string HubID = user.HubID?.ToString()??String.Empty;
+
                 List<Claim> claims = new List<Claim>()
                 {
                     new Claim(JwtRegisteredClaimNames.Sid,user.Id),
                     new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.NameId, HubID)
                 };
                 var roles = await userManager.GetRolesAsync(user);
                 //This is a very important line -> it adds the ROLES in the PAYLOAD of the TOKEN :)
