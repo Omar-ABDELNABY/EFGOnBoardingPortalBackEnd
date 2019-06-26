@@ -19,7 +19,6 @@ namespace Utilities
         public virtual DbSet<Hub> Hubs { get; set; }
         public virtual DbSet<Subhub> SubHubs { get; set; }
         public virtual DbSet<Connection> Connections { get; set; }
-        public virtual DbSet<Email> Emails { get; set; }
 
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
