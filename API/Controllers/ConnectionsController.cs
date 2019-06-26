@@ -65,7 +65,42 @@ namespace API.Controllers
             return Ok(connectionService.GetUserConnections(userId));
         }
 
+        [HttpGet]
+        [Route("clientConnectionsBYAdmin{clientID}")]
+        public IActionResult GetclientConnectionsBYAdmin([FromRoute] int clientID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+
+            if (connectionService.clientConnectionsBYAdmin(clientID) == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(connectionService.clientConnectionsBYAdmin(clientID));
+        }
+
+
+        [HttpGet]
+        [Route("clientConnectionsByHub{clientID}")]
+        public IActionResult GetclientConnectionsByHub([FromRoute] int clientID,[FromBody]int hubID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            if (connectionService.clientConnectionsByHub(clientID,hubID) == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(connectionService.clientConnectionsByHub(clientID,hubID));
+        }
 
 
         // GET: api/Connections/5

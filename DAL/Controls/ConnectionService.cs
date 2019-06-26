@@ -56,8 +56,10 @@ namespace DAL.Controls
             return connection;
         }
 
-
-
+        public IEnumerable<Connection> clientConnectionsBYAdmin(int clientID)
+        {
+            return context.Connections.Where(c => c.ClientID == clientID).ToList();
+        }
         public async Task PutConnection(int id, Connection connection)
         {
 
@@ -66,7 +68,10 @@ namespace DAL.Controls
 
         }
 
-
+        public IEnumerable<Connection> clientConnectionsByHub(int clientID,int hubID)
+        {
+            return context.Connections.Where(c => c.ClientID == clientID && c.HubID==hubID).ToList();
+        }
         public async Task<Connection> DeleteConnection(int id)
         {
             var connection = await context.Connections.FindAsync(id);
