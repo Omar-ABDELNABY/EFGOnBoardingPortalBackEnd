@@ -35,7 +35,8 @@ namespace API.Controllers
           
             var userId = User.Claims.ToArray()[0].Value;
             return connectionService.GetCurrentUserAsync(userId);
-    }
+         }
+
 
         // GET: api/Connections
         [HttpGet]
@@ -88,19 +89,38 @@ namespace API.Controllers
         [Route("clientConnectionsByHub/{clientID}")]
         public async Task<IActionResult> GetclientConnectionsByHub([FromRoute] int clientID)
         {
-            var hubID = await GetCurrentUserAsync();
+            var CurUser = await GetCurrentUserAsync();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-
-            if (connectionService.clientConnectionsByHub(clientID,hubID.Hub.ID) == null)
+            IQueryable<Connection> connections = connectionService.clientConnectionsByHub(clientID, (int) CurUser.HubID);
+            if (connections == null)
             {
                 return NotFound();
             }
 
-            return Ok(connectionService.clientConnectionsByHub(clientID,hubID.Hub.ID));
+            return Ok(connections);
+        }
+
+        [HttpGet]
+        [Route("clientConnectionsBySubhub/{clientID}")]
+        public async Task<IActionResult> GetclientConnectionsBySubhub([FromRoute] int clientID)
+        {
+            var CurUser = await GetCurrentUserAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IQueryable<Connection> connections = connectionService.clientConnectionsBySubhub(clientID, (int)CurUser.SubhubID);
+            if (connections == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(connections);
         }
 
 

@@ -58,7 +58,11 @@ namespace DAL.Controls
 
         public IEnumerable<Connection> clientConnectionsBYAdmin(int clientID)
         {
-            return context.Connections.Where(c => c.ClientID == clientID).ToList();
+            return context.Connections.Where(c => c.ClientID == clientID)
+                .Include(c => c.Client)
+                .Include(c => c.Hub)
+                .Include(c => c.SubHub)
+                .ToList();
         }
         public async Task PutConnection(int id, Connection connection)
         {
@@ -68,9 +72,19 @@ namespace DAL.Controls
 
         }
 
-        public IEnumerable<Connection> clientConnectionsByHub(int clientID,int hubID)
+        public IQueryable<Connection> clientConnectionsByHub(int clientID,int hubID)
         {
-            return context.Connections.Where(c => c.ClientID == clientID && c.HubID==hubID).ToList();
+            return context.Connections.Where(c => c.ClientID == clientID && c.HubID == hubID)
+                .Include(c => c.Client)
+                .Include(c => c.Hub)
+                .Include(c => c.SubHub);
+        }
+        public IQueryable<Connection> clientConnectionsBySubhub(int clientID, int subhubID)
+        {
+            return context.Connections.Where(c => c.ClientID == clientID && c.SubHubID == subhubID)
+                .Include(c => c.Client)
+                .Include(c => c.Hub)
+                .Include(c => c.SubHub);
         }
         public async Task<Connection> DeleteConnection(int id)
         {
